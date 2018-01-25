@@ -151,6 +151,8 @@ SET(APPLICATION_FILTERS_ACTIONS_SRCS
   Actions/ActionSingleThreshold.cc
   Actions/ActionWatershedFilter.h
   Actions/ActionWatershedFilter.cc
+  Actions/ActionMRIBiasFieldCorrectionFilter.h
+  Actions/ActionMRIBiasFieldCorrectionFilter.cc
 )
 
 IF(BUILD_WITH_PYTHON)

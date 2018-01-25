@@ -74,6 +74,7 @@ SET(INTERFACE_TOOLINTERFACE_SRCS
   PadToolInterface.cc
   ImplicitModelToolInterface.cc
   WatershedFilterInterface.cc
+  MRIBiasFieldCorrectionFilterInterface.cc
 )
 
 SET(INTERFACE_TOOLINTERFACE_MOC_SRCS
@@ -124,6 +125,7 @@ SET(INTERFACE_TOOLINTERFACE_MOC_SRCS
   PadToolInterface.h
   ImplicitModelToolInterface.h
   WatershedFilterInterface.h
+  MRIBiasFieldCorrectionFilterInterface.h
 )
 
 SET(INTERFACE_TOOLINTERFACE_NO_MOC_SRCS
