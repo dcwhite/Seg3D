@@ -1,4 +1,4 @@
-///*
+/*
  For more information, please see: http://software.sci.utah.edu
  
  The MIT License
@@ -48,6 +48,8 @@ namespace Seg3D
 MRIBiasFieldCorrectionFilter::MRIBiasFieldCorrectionFilter( const std::string& toolid ) :
 SingleTargetTool( Core::VolumeType::DATA_E, toolid )
 {
+  // Create an empty list of label options
+  std::vector< LayerIDNamePair > empty_list( 1, std::make_pair( Tool::NONE_OPTION_C, Tool::NONE_OPTION_C ) );
   // Need to set ranges and default values for all parameters
   this->add_state( "replace", this->replace_state_, false );
     
@@ -76,7 +78,7 @@ void MRIBiasFieldCorrectionFilter::execute( Core::ActionContextHandle context )
   // NOTE: Need to lock state engine as this function is run from the interface thread
   Core::StateEngine::lock_type lock( Core::StateEngine::GetMutex() );
   
-  ActionNoiseImageFilter::Dispatch( context,
+  ActionMRIBiasFieldCorrectionFilter::Dispatch( context,
                                          this->target_layer_state_->get(),
                                          this->mask_state_->get(),
                                          this->replace_state_->get(),

@@ -179,6 +179,7 @@ SET(INTERFACE_TOOLINTERFACE_UI_SRCS
   PadToolInterface.ui
   ImplicitModelToolInterface.ui
   WatershedFilterInterface.ui
+  MRIBiasFieldCorrectionFilterInterface.ui
 )
 
 ##################################################
