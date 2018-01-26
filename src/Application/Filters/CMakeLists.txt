@@ -178,6 +178,8 @@ TARGET_LINK_LIBRARIES(Application_Filters
   ${ITKWatersheds_LIBRARIES}
   ${ITKOptimizers_LIBRARIES}
   ${ImplicitFunction_LIBRARY}
+  ${ITKBiasCorrection_LIBRARIES}
+  ${ITKPolynomials_LIBRARIES}
   ${TETGEN_LIBRARY}
 )
 
