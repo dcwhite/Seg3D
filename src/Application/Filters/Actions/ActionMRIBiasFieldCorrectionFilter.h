@@ -63,9 +63,10 @@ public:
     this->add_layer_id( this->target_layer_ );
     this->add_layer_id( this->mask_layer_ );
     this->add_parameter( this->replace_ );
+	this->add_parameter(this->invert_mask_);
+	this->add_parameter(this->sandbox_);
     //this->add_parameter( this->preserve_data_format_ );
     //this->add_parameter( this->radius_ );
-    this->add_parameter( this->sandbox_ );
   }
   
   // -- Functions that describe action --

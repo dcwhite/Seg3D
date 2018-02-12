@@ -94,7 +94,7 @@ public:
   LayerHandle dst_layer_;
   
   bool invert_mask_;
-    std::string replace_with_;
+  std::string replace_with_;
   //bool preserve_data_format_;
   //int radius_;
   
@@ -115,6 +115,9 @@ public:
     // NOTE: This only does wrapping and does not regenerate the data.
     typename Core::ITKImageDataT<VALUE_TYPE>::Handle input_image; 
     this->get_itk_image_from_layer<VALUE_TYPE>( this->src_layer_, input_image );
+
+	//typename Core::ITKImageDataT<VALUE_TYPE>::Handle mask_image;
+	//this->get_itk_image_from_mask_layer<VALUE_TYPE>(this->mask_layer_, mask_image);
     
     // Create a new ITK filter instantiation.	
     typename filter_type::Pointer filter = filter_type::New();
