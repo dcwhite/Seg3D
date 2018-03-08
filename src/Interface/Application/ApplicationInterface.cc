@@ -163,7 +163,7 @@ ApplicationInterface::ApplicationInterface( std::string file_to_view_on_open ) :
   this->private_->controller_interface_ = new ControllerInterface( this );
   this->private_->keyboard_shortcuts_ = new ShortcutsInterface( this );
   this->private_->message_widget_ = new MessageWindow( this );
-  this->private_->splash_screen_ = new SplashScreen( this );
+  this->private_->splash_screen_ = new SplashScreen( true, this );
 #ifdef BUILD_WITH_PYTHON
   this->private_->python_console_ = new PythonConsoleWidget( this );
 #endif
@@ -617,30 +617,26 @@ void ApplicationInterface::HandleCriticalErrorMessage( qpointer_type qpointer, i
 
 void ApplicationInterface::handle_osx_file_open_event (std::string filename)
 {
-  Seg3D::ProjectHandle current_project = Seg3D::ProjectManager::Instance()->get_current_project();
-
   // must do this to make sure a double-click on a project file doesn't use this executable session
-  bool new_session = InterfaceManager::Instance()->splash_screen_visibility_state_->get();
+  bool useCurrentSession = InterfaceManager::Instance()->splash_screen_visibility_state_->get();
   if ( !this->private_->splash_screen_ || this->private_->splash_screen_->get_user_interacted() )
   {
-    new_session = false;
+    useCurrentSession = false;
   }
 
-  if ( !new_session )
+  if (useCurrentSession)
   {
-    boost::filesystem::path app_filepath;
-    Core::Application::Instance()->get_application_filepath( app_filepath );
-
-    std::string command = std::string( "" ) +
-    app_filepath.parent_path().parent_path().string() + "/Contents/MacOS/Seg3D2 \"" + filename + "\" &";
-
-    system( command.c_str() );
+    this->open_initial_project(filename);
   }
   else
   {
-    std::vector<std::string> project_file_extensions = Project::GetProjectFileExtensions();
+    boost::filesystem::path app_filepath;
+    Core::Application::Instance()->get_application_filepath(app_filepath);
 
-    this->open_initial_project (filename);
+    std::string command = app_filepath.parent_path().parent_path().string() + "/Contents/MacOS/Seg3D2 \"" + filename + "\" &";
+
+    system(command.c_str());
+   
   }
 }
 
@@ -680,6 +676,17 @@ std::string ApplicationInterface::find_project_file ( std::string path )
 
 bool ApplicationInterface::open_initial_project ( std::string filename )
 {
+  bool useCurrentSession = InterfaceManager::Instance()->splash_screen_visibility_state_->get();
+  if (!this->private_->splash_screen_ || this->private_->splash_screen_->get_user_interacted())
+  {
+    useCurrentSession = false;
+  }
+
+  if (useCurrentSession)
+  {
+    std::cout << useCurrentSession << std::endl;
+  }
+
   filename = this->find_project_file ( filename );
 
   if ( filename == "" ) return false;
@@ -694,7 +701,7 @@ bool ApplicationInterface::open_initial_project ( std::string filename )
     // No location is set, so no project will be generated on disk for now
     ActionNewProject::Dispatch( Core::Interface::GetWidgetActionContext(),
                                 "", "Untitled Project" );
-    LayerIOFunctions::ImportFiles( NULL, filename );
+    LayerIOFunctions::ImportFiles( this, filename );
     return true;
   }
 

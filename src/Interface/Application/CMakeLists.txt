@@ -33,6 +33,7 @@
 
 SET(INTERFACE_APPLICATION_SRCS
   ApplicationInterface.cc
+  ApplicationInterfaceTest.cc
   ColorPickerWidget.cc
   ControllerInterface.cc
   ControllerContext.cc
@@ -81,6 +82,7 @@ SET(INTERFACE_APPLICATION_SRCS
 
 SET(INTERFACE_APPLICATION_MOC_SRCS
   ApplicationInterface.h
+  ApplicationInterfaceTest.h
   ColorPickerWidget.h
   ControllerInterface.h
   ControllerActionHistory.h

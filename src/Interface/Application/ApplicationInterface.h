@@ -97,7 +97,7 @@ private:
   void begin_progress( Core::ActionProgressHandle handle );
   void end_progress( Core::ActionProgressHandle handle );
   void report_progress( Core::ActionProgressHandle handle );
-  void center_seg3d_gui_on_screen( QWidget *widget );
+  
 
   /// SAVE_PREFERENCES:
   /// this function is called when the visibility of the PreferencesManager is changed and when it
@@ -130,8 +130,9 @@ private:
 
   /// FILE_PROJECT_FILE:
   /// Finds the project file within a bundle directory, or returns the project file if already given
-  std::string find_project_file ( std::string path );
-
+public:
+  static std::string find_project_file ( std::string path );
+  static void center_seg3d_gui_on_screen(QWidget *widget);
   // NOTE:
   // We need to override these events for the progress widget that draws an transparent layer
   // over the full GUI.

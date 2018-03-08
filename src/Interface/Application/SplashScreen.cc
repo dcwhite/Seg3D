@@ -66,7 +66,7 @@ public:
 };
 
 
-SplashScreen::SplashScreen( QWidget *parent ) :
+SplashScreen::SplashScreen( bool showProjects, QWidget *parent ) :
   QtUtils::QtCustomDialog( parent ),
   private_( new SplashScreenPrivate )
 {
@@ -87,16 +87,19 @@ SplashScreen::SplashScreen( QWidget *parent ) :
   // Disable these since they arent being used yet.
   this->private_->ui_.load_recent_button_->setEnabled( false );
     
-  this->populate_recent_projects();
-    
+  if (showProjects)
   {
-    Core::StateEngine::lock_type lock( Core::StateEngine::GetMutex() );
-    bool project_creation = InterfaceManager::Instance()->enable_project_creation_state_->get();
-    
-    if ( !project_creation )
+    this->populate_recent_projects();
+
     {
-      this->private_->ui_.new_project_button_->setEnabled( false );
-      this->private_->ui_.quick_open_button_->setEnabled( false );
+      Core::StateEngine::lock_type lock(Core::StateEngine::GetMutex());
+      bool project_creation = InterfaceManager::Instance()->enable_project_creation_state_->get();
+
+      if (!project_creation)
+      {
+        this->private_->ui_.new_project_button_->setEnabled(false);
+        this->private_->ui_.quick_open_button_->setEnabled(false);
+      }
     }
   }
     

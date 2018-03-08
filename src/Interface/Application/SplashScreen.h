@@ -59,7 +59,7 @@ Q_SIGNALS:
   void dialog_closed();
 
 public:
-  SplashScreen( QWidget* parent = 0 );
+  explicit SplashScreen( bool showProjects = true, QWidget* parent = 0 );
   virtual ~SplashScreen();
 
   /// GET_USER_INTERACTED:
