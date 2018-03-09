@@ -186,7 +186,6 @@ ApplicationInterface::ApplicationInterface( std::string file_to_view_on_open ) :
   this->private_->tools_dock_window_ = new ToolsDockWidget( this );
   this->addDockWidget( Qt::LeftDockWidgetArea, this->private_->tools_dock_window_ );
 
-
   // Connect the windows and widgets to their visibility states
   QtUtils::QtBridge::Show( this->private_->rendering_dock_window_,
     InterfaceManager::Instance()->rendering_dockwidget_visibility_state_ );
@@ -623,6 +622,7 @@ void ApplicationInterface::handle_osx_file_open_event (std::string filename)
   {
     useCurrentSession = false;
   }
+<<<<<<< HEAD
 
   if (useCurrentSession)
   {
@@ -638,6 +638,21 @@ void ApplicationInterface::handle_osx_file_open_event (std::string filename)
     system(command.c_str());
    
   }
+=======
+    
+  if ( useCurrentSession )
+  {
+    this->close();
+  }
+
+  boost::filesystem::path app_filepath;
+  Core::Application::Instance()->get_application_filepath( app_filepath );
+    
+  std::string command = app_filepath.parent_path().parent_path().string()
+      + "/Contents/MacOS/Seg3D2 \"" + filename + "\" &";
+    
+  system( command.c_str() );
+>>>>>>> SCIInstitute/master
 }
 
 
