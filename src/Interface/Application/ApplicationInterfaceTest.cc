@@ -131,16 +131,16 @@ void ApplicationInterfaceTest::handle_osx_file_open_event(std::string filename)
   }
   LOG_STUFF(useCurrentSession);
 
-  if (useCurrentSession)
-  {
-    this->open_initial_project(filename);
-  }
-  else
+  // if (useCurrentSession)
+  // {
+  //   this->open_initial_project(filename);
+  // }
+  // else
   {
     boost::filesystem::path app_filepath;
     Core::Application::Instance()->get_application_filepath(app_filepath);
 
-    std::string command = app_filepath.parent_path().parent_path().string() + "/Contents/MacOS/Seg3D2 \"" + filename + "\" &";
+    std::string command = app_filepath.parent_path().parent_path().string() + "/Contents/MacOS/Seg3D2_orig \"" + filename + "\" &";
 
     LOG_STUFF(command);
     system(command.c_str());
