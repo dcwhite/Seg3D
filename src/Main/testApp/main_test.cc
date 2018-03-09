@@ -37,7 +37,7 @@
 #include <QtUtils/Utils/QtApplication.h>
 
 #include "Seg3DGui.h"
-
+#include <syslog.h>
 
 ///////////////////////////////////////////////////////////
 // Main Seg3D entry point
@@ -48,14 +48,18 @@ using namespace Seg3D;
 
 int main( int argc, char **argv )
 {
+  syslog (LOG_WARNING, "Hello from seg3d_test");
+  syslog (LOG_WARNING, __FUNCTION__);
+  std::cerr << __FUNCTION__ << std::endl;
+
   Core::Application::Instance()->parse_command_line_parameters( argc, argv );
   auto app = new Seg3DGuiTest();
-	if (!(QtUtils::QtApplication::Instance()->setup(argc, argv))) 
+	if (!(QtUtils::QtApplication::Instance()->setup(argc, argv)))
     return (-1);
-  
+
 
   app->run();
-  
+
 
   delete app;
 

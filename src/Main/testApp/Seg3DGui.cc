@@ -41,6 +41,7 @@
 #include <QtUtils/Utils/QtApplication.h>
 
 #include "Seg3DGui.h"
+#include <syslog.h>
 
 namespace Seg3D
 {
@@ -50,10 +51,14 @@ bool Seg3DGuiTest::run()
 {
   auto app_interface = new ApplicationInterfaceTest();
 
+std::cerr << __FUNCTION__ << " " << file_to_view << std::endl;
+syslog (LOG_WARNING, __FUNCTION__);
+syslog (LOG_WARNING, file_to_view.c_str());
   bool opened_init_project = app_interface->open_initial_project( this->file_to_view );
-
-  if (!opened_init_project && this->display_splash_screen) 
+LOG_STUFF(opened_init_project);
+  if (!opened_init_project && this->display_splash_screen)
   {
+    syslog (LOG_WARNING, "Should display splash screen");
       app_interface->activate_splash_screen();
   }
 

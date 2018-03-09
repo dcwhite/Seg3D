@@ -79,6 +79,7 @@
 #include <Interface/Application/ViewerInterface.h>
 #include <Interface/Application/SaveProjectAsWizard.h>
 
+
 #ifdef BUILD_WITH_PYTHON
 #include <Interface/Application/PythonConsoleWidget.h>
 #endif
@@ -88,7 +89,7 @@
 namespace Seg3D
 {
 
-ApplicationInterfaceTest::ApplicationInterfaceTest(std::string file_to_view_on_open) 
+ApplicationInterfaceTest::ApplicationInterfaceTest(std::string file_to_view_on_open)
 {
   // Ensure that resources are available
   // This function ensures that all the images are available
@@ -97,7 +98,7 @@ ApplicationInterfaceTest::ApplicationInterfaceTest(std::string file_to_view_on_o
   this->setStyleSheet( StyleSheet::MAIN_STYLE_C );
 
   // Set the window information and set the version numbers
-  this->setWindowTitle( "Test Seg3d for file double-clicking" );
+  this->setWindowTitle( "Test Seg3d for file double-clicking: " + QString::fromStdString(file_to_view_on_open) );
 
   // Tell Qt what size to start up in
   this->resize( 1280, 720 );
@@ -117,12 +118,18 @@ void ApplicationInterfaceTest::activate_splash_screen()
 
 void ApplicationInterfaceTest::handle_osx_file_open_event(std::string filename)
 {
+  std::cerr << __FUNCTION__ << " " << filename << std::endl;
+  syslog (LOG_WARNING, __FUNCTION__);
+  logStuff("filename", filename.c_str(), __LINE__);
+  //QMessageBox::information(nullptr, "", "handle_osx_file_open_event: " + QString::fromStdString(filename));
   // must do this to make sure a double-click on a project file doesn't use this executable session
   bool useCurrentSession = InterfaceManager::Instance()->splash_screen_visibility_state_->get();
+  LOG_STUFF(useCurrentSession);
   if ( !this->splash_screen_ || this->splash_screen_->get_user_interacted() )
   {
     useCurrentSession = false;
   }
+  LOG_STUFF(useCurrentSession);
 
   if (useCurrentSession)
   {
@@ -135,16 +142,23 @@ void ApplicationInterfaceTest::handle_osx_file_open_event(std::string filename)
 
     std::string command = app_filepath.parent_path().parent_path().string() + "/Contents/MacOS/Seg3D2 \"" + filename + "\" &";
 
+    LOG_STUFF(command);
     system(command.c_str());
-   
+
   }
+  syslog (LOG_WARNING, "Exiting handle_osx_file_open_event");
 }
 
 
 
 bool ApplicationInterfaceTest::open_initial_project(std::string filename)
 {
-  std::cout << __FUNCTION__ << " " << filename << std::endl;
+  //static int callCount = 0;
+  // QMessageBox::information(nullptr, "", QString::number(callCount++) +
+  //   " open_initial_project: " + QString::fromStdString(filename));
+  syslog (LOG_WARNING, __FUNCTION__);
+  syslog (LOG_WARNING, filename.c_str());
+  std::cerr << __FUNCTION__ << " " << filename << std::endl;
 #if 0
   bool useCurrentSession = InterfaceManager::Instance()->splash_screen_visibility_state_->get();
   if (!this->splash_screen_ || this->splash_screen_->get_user_interacted())

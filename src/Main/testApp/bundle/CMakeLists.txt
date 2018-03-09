@@ -31,21 +31,25 @@
 ###########################################
 
 SET(MAIN_SRCS
-  main_test.cc
-  Seg3DBase.h
-  Seg3DBase.cc
-  Seg3DGui.h
-  Seg3DGui.cc
+  ../main_test.cc
+  ../Seg3DBase.h
+  ../Seg3DBase.cc
+  ../Seg3DGui.h
+  ../Seg3DGui.cc
 )
 
 ###########################################
 # Build the Seg3D executable
 ###########################################
+LIST(APPEND MAIN_SRCS ${APPLICATION_OSX_ICON_FULL_PATH})
+SET_SOURCE_FILES_PROPERTIES(${APPLICATION_OSX_ICON_FULL_PATH}
+  PROPERTIES
 
+MACOSX_PACKAGE_LOCATION Resources)
 
-ADD_EXECUTABLE(Seg3d_test ${MAIN_SRCS})
+ADD_EXECUTABLE(Seg3d_test_bundle MACOSX_BUNDLE ${MAIN_SRCS})
 
-TARGET_LINK_LIBRARIES(Seg3d_test
+TARGET_LINK_LIBRARIES(Seg3d_test_bundle
   ${SCI_BOOST_LIBRARY}
 
   QtUtils_Utils
@@ -57,29 +61,29 @@ TARGET_LINK_LIBRARIES(Seg3d_test
   ${RESOURCES_LIBRARY}
 )
 
-IF(WIN32)
-  TARGET_LINK_LIBRARIES(Seg3d_test ${Qt5Core_QTMAIN_LIBRARIES} )
-  SET_TARGET_PROPERTIES(Seg3d_test
-    PROPERTIES
-    LINK_FLAGS "/INCREMENTAL:NO")
-ENDIF()
+
+SET_TARGET_PROPERTIES(Seg3d_test_bundle
+  PROPERTIES
+  MACOSX_BUNDLE_INFO_PLIST ${SEG3D_SOURCE_DIR}/Resources/info.plist
+  MACOSX_BUNDLE_ICON_FILE ${APPLICATION_OSX_ICON}
+)
 
 IF(APPLE)
-  SET_TARGET_PROPERTIES(Seg3d_test
+  SET_TARGET_PROPERTIES(Seg3d_test_bundle
     PROPERTIES
     LINK_FLAGS "-framework CoreGraphics"
   )
 ENDIF()
 
 IF(BUILD_WITH_PYTHON)
-  TARGET_LINK_LIBRARIES(Seg3d_test
+  TARGET_LINK_LIBRARIES(Seg3d_test_bundle
     Core_Python
     Application_Socket
   )
 ENDIF()
 
 # add libraries with plug-ins and extensions
-REGISTERED_TARGET_LINK_LIBRARIES(Seg3d_test)
+REGISTERED_TARGET_LINK_LIBRARIES(Seg3d_test_bundle)
 
 ###########################################
 # SETUP MACOSX APPLICATION BUNDLE
@@ -93,37 +97,15 @@ REGISTERED_TARGET_LINK_LIBRARIES(Seg3d_test)
 
 
 
-IF(APPLE)
-  ADD_SUBDIRECTORY(bundle)
-ENDIF()
+  # set up app bundle
+  ADD_CUSTOM_COMMAND(TARGET Seg3d_test_bundle
+    POST_BUILD
+    # configure Qt libs
+    COMMAND ${MACDEPLOYQT} Seg3d_test_bundle.app -verbose=${MACDEPLOYQT_OUTPUT_LEVEL}
+    WORKING_DIRECTORY ${SEG3D_BINARY_DIR})
+  
 
-
-IF(APPLE)
-  INSTALL(TARGETS Seg3d_test
+  INSTALL(TARGETS Seg3d_test_bundle
         RUNTIME DESTINATION .
         BUNDLE DESTINATION .
   )
-ELSE()
-  GET_FILENAME_COMPONENT(QTCORENAME ${QtCore_location_Release} NAME_WE)
-  GET_FILENAME_COMPONENT(QTGUINAME ${QtGui_location_Release} NAME_WE)
-  GET_FILENAME_COMPONENT(QTOPENGLNAME ${QtOpenGL_location_Release} NAME_WE)
-  GET_FILENAME_COMPONENT(QTWIDGETSNAME ${QtWidgets_location_Release} NAME_WE)
-  GET_FILENAME_COMPONENT(QTSVGNAME ${QtSvg_location_Release} NAME_WE)
-
-  IF(WIN32)
-    INSTALL(TARGETS Seg3d_test
-      RUNTIME DESTINATION bin
-    )
-
-    INSTALL(PROGRAMS
-      ${SEG3D_BINARY_DIR}/$<CONFIG>/${QTCORENAME}.dll
-      ${SEG3D_BINARY_DIR}/$<CONFIG>/${QTGUINAME}.dll
-      ${SEG3D_BINARY_DIR}/$<CONFIG>/${QTOPENGLNAME}.dll
-      ${SEG3D_BINARY_DIR}/$<CONFIG>/${QTWIDGETSNAME}.dll
-      ${SEG3D_BINARY_DIR}/$<CONFIG>/${QTSVGNAME}.dll
-        DESTINATION bin
-    )
-
-
-  ENDIF()
-ENDIF()

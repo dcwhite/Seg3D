@@ -51,7 +51,7 @@
 #include <Interface/Application/SplashScreen.h>
 #include <Core/Action/Actions.h>
 #include <Core/Utils/ConnectionHandler.h>
-
+#include <syslog.h>
 #endif
 
 namespace Seg3D
@@ -99,5 +99,17 @@ private:
 };
 
 } //end namespace
+
+template <class T>
+void logStuff(const char* name, const T& t, int lineNumber)
+{
+  std::ostringstream ostr;
+  ostr << name << ": " << t;
+  syslog (LOG_WARNING, ostr.str().c_str());
+}
+
+#define LOG_STUFF(x) logStuff(#x, x, __LINE__)
+
+
 
 #endif

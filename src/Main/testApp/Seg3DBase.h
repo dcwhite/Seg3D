@@ -44,7 +44,7 @@ class Seg3DBaseTest
 
   protected:
     std::string file_to_view;
-    bool display_splash_screen;
+    bool display_splash_screen{true};
 
 };
 
